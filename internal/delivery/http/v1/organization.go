@@ -17,6 +17,11 @@ func (h *Handler) InitOrganizationRoutes(v1 *gin.RouterGroup) {
 		organization.GET("/:id", h.getOrganizationById)
 		organization.PUT("/:id", h.updateOrganization)
 		organization.DELETE("/:id", h.deleteOrganization)
+
+		roles := organization.Group(":id/role")
+		{
+			h.InitRoleRoutes(roles)
+		}
 	}
 }
 
@@ -28,7 +33,7 @@ func (h *Handler) InitOrganizationRoutes(v1 *gin.RouterGroup) {
 // @Accept json
 // @Produce json
 // @Param input body registrationForm true "Описание"
-// @Success 200 {string} OrganizationId
+// @Success 200 {int} OrganizationId
 // @Failure 400,404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
 // @Router /api/v1/organization/ [post]
@@ -142,7 +147,7 @@ func (h *Handler) getOrganizationById(c *gin.Context) {
 // @Summary Изменить организацию
 // @Security ApiKeyAuth
 // @Tags auth
-// @Description Сервер возвращает изменяет данные организации
+// @Description Сервер изменяет данные организации
 // @ID updateOrganization
 // @Accept json
 // @Produce json

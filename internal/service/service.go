@@ -15,6 +15,11 @@ type Organization interface {
 }
 
 type Role interface {
+	CreateRole(m domain.Role, userId int) (int, error)
+	GetAllRoles(orgId int) ([]domain.Role, error)
+	GetRoleById(roleId int) (domain.Role, error)
+	UpdateRole(m domain.UpdateRole, userId int) error
+	DeleteRole(orgId, roleId, userId int) error
 }
 
 type Employee interface {
@@ -29,5 +34,6 @@ type Services struct {
 func NewServices(repo *repository.Repository) *Services {
 	return &Services{
 		Organization: NewOrganizationPostgres(repo),
+		Role:         NewRoleService(repo),
 	}
 }
