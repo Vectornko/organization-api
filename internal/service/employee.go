@@ -68,7 +68,7 @@ func (s *EmployeeService) GetEmployeeById(employeeId int) (domain.OrganizationsU
 }
 
 func (s *EmployeeService) UpdateEmployee(m domain.UpdateEmployee, userId int) error {
-	access, err := s.repo.Role.RoleAccess(userId, m.OrganizationId, repository.EditRole)
+	access, err := s.repo.Role.RoleAccess(userId, m.OrganizationId, repository.EditEmployee)
 	if err != nil {
 		return errors.New("access denied")
 	}
@@ -81,7 +81,7 @@ func (s *EmployeeService) UpdateEmployee(m domain.UpdateEmployee, userId int) er
 }
 
 func (s *EmployeeService) DeleteEmployee(orgId, employeeId, userId int) error {
-	access, err := s.repo.Role.RoleAccess(userId, orgId, repository.DeleteRole)
+	access, err := s.repo.Role.RoleAccess(userId, orgId, repository.DeleteEmployee)
 	if err != nil {
 		return errors.New("access denied")
 	}

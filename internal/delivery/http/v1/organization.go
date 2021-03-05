@@ -18,12 +18,12 @@ func (h *Handler) InitOrganizationRoutes(v1 *gin.RouterGroup) {
 		organization.PUT("/:id", h.updateOrganization)
 		organization.DELETE("/:id", h.deleteOrganization)
 
-		roles := organization.Group(":id/role")
+		roles := organization.Group(":id/role", h.organizationEnable)
 		{
 			h.InitRoleRoutes(roles)
 		}
 
-		employee := organization.Group(":id/employee")
+		employee := organization.Group(":id/employee", h.organizationEnable)
 		{
 			h.InitEmployeeRoutes(employee)
 		}

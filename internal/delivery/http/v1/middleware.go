@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/viper"
 	"github.com/vectornko/organization-api/internal/domain"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -65,4 +66,18 @@ func parse(accessToken domain.AccessToken) (string, error) {
 	}
 
 	return claims["sub"].(string), nil
+}
+
+func (h *Handler) organizationEnable(c *gin.Context) {
+	orgId, err := strconv.Atoi(c.Param("id"))
+	enable, err := h.services.Organization.IsEnable(orgId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if enable == false {
+		newErrorResponse(c, http.StatusBadRequest, "the organization is in the verification phase")
+		return
+	}
 }
