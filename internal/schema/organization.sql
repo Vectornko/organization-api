@@ -47,7 +47,8 @@ CREATE TABLE organizations_users
     id SERIAL NOT NULL PRIMARY KEY,
     organization_id INT REFERENCES organizations(id) ON DELETE CASCADE NOT NULL ,
     user_id INT NOT NULL,
-    role_id INT REFERENCES roles(id) ON DELETE SET NULL
+    role_id INT REFERENCES roles(id) ON DELETE SET NULL,
+    confirmed BOOLEAN DEFAULT FALSE
 );
 
 

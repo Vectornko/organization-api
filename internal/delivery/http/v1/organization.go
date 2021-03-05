@@ -22,12 +22,17 @@ func (h *Handler) InitOrganizationRoutes(v1 *gin.RouterGroup) {
 		{
 			h.InitRoleRoutes(roles)
 		}
+
+		employee := organization.Group(":id/employee")
+		{
+			h.InitEmployeeRoutes(employee)
+		}
 	}
 }
 
 // @Summary Регистрация организации
 // @Security ApiKeyAuth
-// @Tags auth
+// @Tags organization
 // @Description Сервер создаёт организацию и возврощает её id
 // @ID createOrganization
 // @Accept json
@@ -94,7 +99,7 @@ func (h *Handler) createOrganization(c *gin.Context) {
 
 // @Summary Список всех организаций
 // @Security ApiKeyAuth
-// @Tags auth
+// @Tags organization
 // @Description Сервер возвращает список всех организаций
 // @ID getAllOrganizations
 // @Accept json
@@ -118,7 +123,7 @@ func (h *Handler) getAllOrganizations(c *gin.Context) {
 
 // @Summary Информация о организации
 // @Security ApiKeyAuth
-// @Tags auth
+// @Tags organization
 // @Description Сервер возвращает организацию по id
 // @ID getOrganizationById
 // @Accept json
@@ -146,7 +151,7 @@ func (h *Handler) getOrganizationById(c *gin.Context) {
 
 // @Summary Изменить организацию
 // @Security ApiKeyAuth
-// @Tags auth
+// @Tags organization
 // @Description Сервер изменяет данные организации
 // @ID updateOrganization
 // @Accept json
@@ -184,7 +189,7 @@ func (h *Handler) updateOrganization(c *gin.Context) {
 
 // @Summary Удаление организации
 // @Security ApiKeyAuth
-// @Tags auth
+// @Tags organization
 // @Description Сервер удаляет организацию
 // @ID deleteOrganization
 // @Accept json

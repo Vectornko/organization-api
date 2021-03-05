@@ -13,6 +13,9 @@ const (
 	CreateRole         = "create_role"
 	EditRole           = "edit_role"
 	DeleteRole         = "delete_role"
+	CreateEmployee     = "create_employee"
+	EditEmployee       = "edit_employee"
+	DeleteEmployee     = "delete_employee"
 )
 
 type Organization interface {
@@ -21,6 +24,7 @@ type Organization interface {
 	GetOrganizationById(orgId int) (domain.Organization, error)
 	UpdateOrganization(m domain.UpdateOrganization) error
 	DeleteOrganization(orgId int) error
+
 	IsEnable(orgId int) (bool, error)
 }
 
@@ -30,10 +34,19 @@ type Role interface {
 	GetRoleById(roleId int) (domain.Role, error)
 	UpdateRole(m domain.UpdateRole) error
 	DeleteRole(roleId int) error
+
 	RoleAccess(userId, orgId int, accessType string) (bool, error)
 }
 
 type Employee interface {
+	CreateEmployee(m domain.OrganizationsUsers) (int, error)
+	GetAllEmployees(orgId int) ([]domain.OrganizationsUsers, error)
+	GetEmployeeById(roleId int) (domain.OrganizationsUsers, error)
+	UpdateEmployee(m domain.UpdateEmployee) error
+	DeleteEmployee(employeeId int) error
+
+	EmployeeExist(employeeId, orgId int) (bool, error)
+	EmployeeConfirmed(employeeId, orgId int) (bool, error)
 }
 
 type Repository struct {
@@ -46,5 +59,6 @@ func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Organization: postgres.NewOrganizationPostgres(db),
 		Role:         postgres.NewRolePostgres(db),
+		Employee:     postgres.NewEmployeePostgres(db),
 	}
 }

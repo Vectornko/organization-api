@@ -23,6 +23,11 @@ type Role interface {
 }
 
 type Employee interface {
+	CreateEmployee(m domain.OrganizationsUsers, userId int) (int, error)
+	GetAllEmployees(orgId int) ([]domain.OrganizationsUsers, error)
+	GetEmployeeById(employeeId int) (domain.OrganizationsUsers, error)
+	UpdateEmployee(m domain.UpdateEmployee, userId int) error
+	DeleteEmployee(orgId, employeeId, userId int) error
 }
 
 type Services struct {
@@ -35,5 +40,6 @@ func NewServices(repo *repository.Repository) *Services {
 	return &Services{
 		Organization: NewOrganizationPostgres(repo),
 		Role:         NewRoleService(repo),
+		Employee:     NewEmployeeService(repo),
 	}
 }
