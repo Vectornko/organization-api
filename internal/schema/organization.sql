@@ -3,14 +3,14 @@ CREATE TABLE organizations
 (
     id SERIAL NOT NULL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    description TEXT,
+    description TEXT DEFAULT 'null',
     email VARCHAR(255) NOT NULL UNIQUE,
     phone VARCHAR(255) NOT NULL UNIQUE,
-    site VARCHAR(255) UNIQUE,
-    coordinates VARCHAR(255),
-    office VARCHAR(255),
+    site VARCHAR(255) UNIQUE DEFAULT 'null',
+    coordinates VARCHAR(255) NOT NULL,
+    office VARCHAR(255) DEFAULT 'null',
     date_creation TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    date_update TIMESTAMPTZ,
+    date_update TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     is_enable BOOLEAN NOT NULL DEFAULT FALSE
 );

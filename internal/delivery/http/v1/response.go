@@ -12,3 +12,7 @@ func newErrorResponse(c *gin.Context, statusCode int, message string) {
 	log.Error(message)
 	c.AbortWithStatusJSON(statusCode, ErrorResponse{Message: message})
 }
+
+func newGoodResponse(c *gin.Context, statusCode int, message string) {
+	c.AbortWithStatusJSON(statusCode, ErrorResponse{Message: message})
+}

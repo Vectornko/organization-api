@@ -14,6 +14,7 @@ const (
 	organizationDocumentsTable = "organization_documents"
 )
 
+// ID ролей
 const (
 	orgCreatorRole = "1"
 )

@@ -13,6 +13,10 @@ func (h *Handler) InitOrganizationRoutes(v1 *gin.RouterGroup) {
 	organization := v1.Group("/organization", h.userIdentify)
 	{
 		organization.POST("/", h.createOrganization)
+		organization.GET("/", h.getAllOrganizations)
+		organization.GET("/:id", h.getOrganizationById)
+		organization.PUT("/:id", h.updateOrganization)
+		organization.DELETE("/:id", h.deleteOrganization)
 	}
 }
 
@@ -24,7 +28,7 @@ func (h *Handler) InitOrganizationRoutes(v1 *gin.RouterGroup) {
 // @Accept json
 // @Produce json
 // @Param input body registrationForm true "Описание"
-// @Success 200 {string} UserId
+// @Success 200 {string} OrganizationId
 // @Failure 400,404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
 // @Router /api/v1/organization/ [post]
@@ -81,6 +85,129 @@ func (h *Handler) createOrganization(c *gin.Context) {
 
 	// Отдаём ответ в виде JSON
 	c.JSON(http.StatusOK, orgId)
+}
+
+// @Summary Список всех организаций
+// @Security ApiKeyAuth
+// @Tags auth
+// @Description Сервер возвращает список всех организаций
+// @ID getAllOrganizations
+// @Accept json
+// @Produce json
+// @Success 200 {object} Organizations
+// @Failure 400,404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /api/v1/organization/ [get]
+func (h *Handler) getAllOrganizations(c *gin.Context) {
+	var organizations Organizations
+	var err error
+
+	organizations.Organizations, err = h.services.Organization.GetAllOrganizations()
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, organizations)
+}
+
+// @Summary Информация о организации
+// @Security ApiKeyAuth
+// @Tags auth
+// @Description Сервер возвращает организацию по id
+// @ID getOrganizationById
+// @Accept json
+// @Produce json
+// @Param  id path int true "id организации"
+// @Success 200 {object} domain.Organization
+// @Failure 400,404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /api/v1/organization/{id} [get]
+func (h *Handler) getOrganizationById(c *gin.Context) {
+	orgId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid organization id")
+		return
+	}
+
+	organization, err := h.services.Organization.GetOrganizationById(orgId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, organization)
+}
+
+// @Summary Изменить организацию
+// @Security ApiKeyAuth
+// @Tags auth
+// @Description Сервер возвращает изменяет данные организации
+// @ID updateOrganization
+// @Accept json
+// @Produce json
+// @Param  id path int true "id организации"
+// @Param input body domain.UpdateOrganization true "Описание"
+// @Success 200 {object} ErrorResponse
+// @Failure 400,404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /api/v1/organization/{id} [put]
+func (h *Handler) updateOrganization(c *gin.Context) {
+	var input domain.UpdateOrganization
+	userId, _ := strconv.Atoi(c.GetString(userCtx))
+
+	err := c.BindJSON(&input)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid input body")
+		return
+	}
+
+	input.Id, err = strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid organization id")
+		return
+	}
+
+	err = h.services.Organization.UpdateOrganization(input, userId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	newGoodResponse(c, http.StatusOK, "organization update")
+}
+
+// @Summary Удаление организации
+// @Security ApiKeyAuth
+// @Tags auth
+// @Description Сервер удаляет организацию
+// @ID deleteOrganization
+// @Accept json
+// @Produce json
+// @Param  id path int true "id организации"
+// @Success 200 {object} ErrorResponse
+// @Failure 400,404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /api/v1/organization/{id} [delete]
+func (h *Handler) deleteOrganization(c *gin.Context) {
+	userId, _ := strconv.Atoi(c.GetString(userCtx))
+	orgId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid organization id")
+		return
+	}
+
+	err = h.services.Organization.DeleteOrganization(orgId, userId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	newGoodResponse(c, http.StatusOK, "organization deleted")
+}
+
+type Organizations struct {
+	Organizations []domain.Organization `json:"organizations"`
 }
 
 type registrationForm struct {

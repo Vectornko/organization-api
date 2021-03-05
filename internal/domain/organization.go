@@ -22,3 +22,15 @@ type OrganizationDocuments struct {
 	OrganizationId int  `json:"organization_id"`
 	IsSecure       bool `json:"is_secure"`
 }
+
+type UpdateOrganization struct {
+	Id          int     `json:"id"`
+	Name        *string `json:"name"`
+	Description *string `json:"description"`
+	Email       *string `json:"email"`
+	Phone       *string `json:"phone"`
+	Site        *string `json:"site"`
+	Coordinates *string `json:"coordinates"`
+	Office      *string `json:"office"`
+	IsActive    *string `json:"is_active"`
+}
