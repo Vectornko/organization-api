@@ -1,0 +1,2 @@
+-- name: data
+INSERT INTO roles (name, edit_organization, delete_organization, create_service, edit_service, delete_service, create_role, edit_role, delete_role, create_employee, edit_employee, delete_employee) VALUES ('организатор', TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE)

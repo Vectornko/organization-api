@@ -7,7 +7,16 @@ import (
 )
 
 // Список таблиц
-const ()
+const (
+	organizationsTable         = "organizations"
+	rolesTable                 = "roles"
+	organizationsUsersTable    = "organizations_users"
+	organizationDocumentsTable = "organization_documents"
+)
+
+const (
+	orgCreatorRole = "1"
+)
 
 // Конфиг для postgres
 type Config struct {
