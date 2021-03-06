@@ -64,3 +64,7 @@ func (s *RoleService) DeleteRole(orgId, roleId, userId int) error {
 		return errors.New("access denied")
 	}
 }
+
+func (s *RoleService) RoleAccess(userId, orgId int, accessType string) (bool, error) {
+	return s.repo.Role.RoleAccess(userId, orgId, accessType)
+}

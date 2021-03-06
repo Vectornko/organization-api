@@ -13,6 +13,11 @@ func (h *Handler) InitRoleRoutes(role *gin.RouterGroup) {
 	role.GET("/:role_id", h.getRoleById)
 	role.PUT("/:role_id", h.updatedRole)
 	role.DELETE("/:role_id", h.deleteRole)
+
+	access := role.Group(":role_id/access")
+	{
+		access.POST("/", h.roleAccess)
+	}
 }
 
 // @Summary Создание роли
@@ -194,6 +199,50 @@ func (h *Handler) deleteRole(c *gin.Context) {
 	}
 
 	newGoodResponse(c, http.StatusOK, "role deleted")
+}
+
+// @Summary Проверить разрешение
+// @Security ApiKeyAuth
+// @Tags access
+// @Description Сервер проверяет доступ человека к какой-то функции
+// @ID deleteRole
+// @Accept json
+// @Produce json
+// @Param  id path int true "id организации"
+// @Param  role_id path int true "id роли"
+// @Param input body domain.RoleAccess true "описание"
+// @Success 200 {bool} True
+// @Failure 400,404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /api/v1/organization/{id}/role/{role_id}/access/ [post]
+func (h *Handler) roleAccess(c *gin.Context) {
+	var input domain.RoleAccess
+
+	orgId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid organization id")
+		return
+	}
+
+	_, err = strconv.Atoi(c.Param("role_id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid role id")
+		return
+	}
+
+	err = c.BindJSON(&input)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid input body")
+		return
+	}
+
+	access, err := h.services.Role.RoleAccess(input.UserId, orgId, input.AccessType)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, access)
 }
 
 type Roles struct {

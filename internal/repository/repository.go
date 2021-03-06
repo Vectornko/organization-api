@@ -16,6 +16,9 @@ const (
 	CreateEmployee     = "create_employee"
 	EditEmployee       = "edit_employee"
 	DeleteEmployee     = "delete_employee"
+	CreateService      = "create_service"
+	EditService        = "edit_service"
+	DeleteService      = "delete_service"
 )
 
 type Organization interface {

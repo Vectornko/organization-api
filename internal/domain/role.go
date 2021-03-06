@@ -33,3 +33,8 @@ type UpdateRole struct {
 	EditEmployee       *bool   `json:"edit_employee"`
 	DeleteEmployee     *bool   `json:"delete_employee"`
 }
+
+type RoleAccess struct {
+	UserId     int    `json:"user_id"`
+	AccessType string `json:"access_type"`
+}

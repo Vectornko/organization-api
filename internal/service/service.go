@@ -20,6 +20,8 @@ type Role interface {
 	GetRoleById(roleId int) (domain.Role, error)
 	UpdateRole(m domain.UpdateRole, userId int) error
 	DeleteRole(orgId, roleId, userId int) error
+
+	RoleAccess(userId, orgId int, accessType string) (bool, error)
 }
 
 type Employee interface {
