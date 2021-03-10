@@ -13,7 +13,6 @@ func (h *Handler) InitOrganizationRoutes(v1 *gin.RouterGroup) {
 	organization := v1.Group("/organization", h.userIdentify)
 	{
 		organization.POST("/", h.createOrganization)
-		organization.GET("/", h.getAllOrganizations)
 		organization.GET("/:id", h.getOrganizationById)
 		organization.PUT("/:id", h.updateOrganization)
 		organization.DELETE("/:id", h.deleteOrganization)
@@ -27,6 +26,10 @@ func (h *Handler) InitOrganizationRoutes(v1 *gin.RouterGroup) {
 		{
 			h.InitEmployeeRoutes(employee)
 		}
+	}
+	unauthorized := v1.Group("/organization")
+	{
+		unauthorized.GET("/", h.getAllOrganizations)
 	}
 }
 
