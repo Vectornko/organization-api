@@ -24,6 +24,9 @@ func (h *Handler) InitAPI() *gin.Engine {
 
 	handlerV1 := v1.NewHandler(h.services)
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	
+	router.Use(optionMiddleware)
+	router.Use(corsMiddleware)
 
 	api := router.Group("/api")
 	{
